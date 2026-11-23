@@ -1,7 +1,8 @@
-# CI/CD: runs tests on every push; deploys to Azure App Service from main.
-# Setup: in your GitHub repo go to Settings > Secrets and variables > Actions and add
-#   AZURE_WEBAPP_NAME      (your App Service name)
-#   AZURE_WEBAPP_PUBLISH_PROFILE  (download "Publish profile" from the App Service overview page)
+# CI: tests and builds on every push.
+# Deploy to Azure runs only when started manually (Actions tab > Run workflow),
+# after adding these repository secrets:
+#   AZURE_WEBAPP_NAME
+#   AZURE_WEBAPP_PUBLISH_PROFILE
 name: Build, test and deploy to Azure
 
 on:
@@ -28,6 +29,7 @@ jobs:
 
   deploy:
     needs: build
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
