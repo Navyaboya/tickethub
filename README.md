@@ -1,6 +1,6 @@
 # TicketHub: Online Ticket Booking REST API
 
-A Spring Boot REST API for booking and cancelling event tickets, backed by MySQL, containerized with Docker and deployable to **Azure App Service** with **Azure Database for MySQL** and a **GitHub Actions** CI/CD pipeline.
+A Spring Boot REST API for booking and cancelling event tickets, backed by MySQL and containerized with Docker. It includes a GitHub Actions workflow that builds and tests the project on every push, and the steps to deploy it to **Azure App Service** with **Azure Database for MySQL**.
 
 ## Features
 - Book a ticket for an event seat (`POST /tickets`)
@@ -21,17 +21,16 @@ Java 17, Spring Boot 3, Spring Data JPA (Hibernate), MySQL 8, Maven, Docker, Git
 Client (Postman / Swagger)
         |
         v
-Azure App Service (Spring Boot JAR, Java 17)
+Spring Boot REST API (controller -> service -> repository)
         |
         v
-Azure Database for MySQL (Flexible Server)
-
-GitHub push to main --> GitHub Actions (test + build) --> deploy to App Service
+MySQL database
 ```
+Target deployment: Spring Boot JAR on Azure App Service (Java 17) with Azure Database for MySQL (Flexible Server).
 
 ## Run locally
 
-### Option 1: Docker Compose (easiest)
+### Option 1: Docker Compose
 ```bash
 docker compose up --build
 ```
@@ -89,10 +88,10 @@ mvn clean package
 az webapp deploy -g tickethub-rg -n tickethub-<yourname> --src-path target/tickethub.jar --type jar
 ```
 
-Live URL: `https://tickethub-<yourname>.azurewebsites.net/swagger-ui.html`
+Once deployed, the API docs are at `https://tickethub-<yourname>.azurewebsites.net/swagger-ui.html`.
 
 ### CI/CD with GitHub Actions
-The workflow in `.github/workflows/azure-deploy.yml` runs tests, builds the JAR and deploys on every push to `main`. Add these repository secrets:
+The workflow in `.github/workflows/azure-deploy.yml` runs the tests and builds the JAR on every push to `main`. The deploy job runs only when started manually from the **Actions** tab (**Run workflow**), after you add these repository secrets:
 - `AZURE_WEBAPP_NAME`: your App Service name
 - `AZURE_WEBAPP_PUBLISH_PROFILE`: the publish profile downloaded from the App Service overview page
 
@@ -100,9 +99,6 @@ The workflow in `.github/workflows/azure-deploy.yml` runs tests, builds the JAR 
 ```bash
 az group delete -n tickethub-rg
 ```
-
-## Screenshots
-Add your Swagger and live deployment screenshots here.
 
 ## Author
 Navya Boya | [LinkedIn](https://www.linkedin.com/in/boya-navya-587288299) | [GitHub](https://github.com/Navyaboya)
